@@ -2,6 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import axios from 'axios'
 import qs from "qs"
+import './assets/css/border.css'
+import './assets/css/reset.css'
 import VueAxios from "vue-axios"
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
