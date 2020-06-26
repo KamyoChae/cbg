@@ -1,39 +1,46 @@
 <template>
-  <div>  
-    <div class="container" v-for="item in result" :key="item.expire_remain_seconds">
-      <div class="leftitem">
-        <img :src="baseUrl + item.icon" alt />
-        <div class="mes">
-          <div class="mestop">
-            <div class="icons">
-              <span class="ico gongs" v-show="!item.pass_fair_show">公</span>
-              <span class="ico huan" v-show="item.allow_bargain">还</span>
+  <div>   
+    <div class="container" 
+    
+    v-for="item in result" 
+    :key="item.expire_remain_seconds+Math.random()" 
+    @click="toInfoMes(item.serverid, item.game_ordersn)"
+    >
+      
+        <div class="leftitem">
+          <img :src="baseUrl +item.icon" alt />
+          <div class="mes">
+            <div class="mestop">
+              <div class="icons">
+                <span class="ico gongs" v-show="!item.pass_fair_show">公</span>
+                <span class="ico huan" v-show="item.allow_bargain">还</span>
+              </div>
+              <div class="menp">{{item.format_equip_name}}</div>
+              <div class="level">{{item.equip_level}}级</div>
             </div>
-            <div class="menp">{{item.format_equip_name}}</div>
-            <div class="level">{{item.equip_level}}级</div>
-          </div>
 
-          <div class="mesmid">
-            <span class="blux">修为：</span>
-            <span class="bluxnum">{{item.other_info.basic_attrs[0][1]}}</span>
-          </div>
-          <div class="mesbot">
-            <div class="botinfo">
-              <span class="blux">金秘籍：</span>
-              <span class="bluxred">{{item.other_info.basic_attrs[1][1]}}</span>
+            <div class="mesmid">
+              <span class="blux">修为：</span>
+              <span class="bluxnum">{{item.other_info.basic_attrs[0][1]}}</span>
             </div>
-            <div class="botinfo">
-              <span class="blux">金紫色特技：</span>
-              <span class="bluxnum">{{item.other_info.basic_attrs[2][1]}}</span>
+            <div class="mesbot">
+              <div class="botinfo">
+                <span class="blux">金秘籍：</span>
+                <span class="bluxred">{{item.other_info.basic_attrs[1][1]}}</span>
+              </div>
+              <div class="botinfo">
+                <span class="blux">金紫色特技：</span>
+                <span class="bluxnum">{{item.other_info.basic_attrs[2][1]}}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="rightitem">
-        <div class="server">{{item.area_name}}-{{item.server_name}} <span v-text="item.platform_type == 2?'And':'IOS'"></span></div>
-        <div class="prices">￥{{item.price/100}}.00</div>
-        <div class="pamu">{{item.collect_num||0}}人收藏</div>
-      </div>
+        <div class="rightitem">
+          <div class="server">{{item.area_name}}-{{item.server_name}} <span v-text="item.platform_type == 2?'And':'IOS'"></span></div>
+          <div class="prices">￥{{item.price/100}}.00</div>
+          <div class="pamu">{{item.collect_num||0}}人收藏</div>
+        </div>
+     
     </div>
   </div>
 </template>
@@ -52,10 +59,28 @@ export default {
   mounted() {
     // console.log(this.result);
   },
-  methods:{ 
+  methods:{
+    toInfoMes(serverid,ordersn ){  
+      let data = this.$qs.stringify({
+        serverid,
+        ordersn,
+        view_loc: "search"
+      }); 
+      this.axios({
+        method: "post",
+        url: "/api/get_equip_detail",
+        headers: {
+          "Content-type": "application/x-www-form-urlencoded"
+        },
+        data: data
+      }).then(res => {
+        console.log(res); 
+        this.$router.push({name:"comIndex",params:{res}})
+      }); 
+    }
   },
   computed: {
-      
+    
   }
 };
 </script>
